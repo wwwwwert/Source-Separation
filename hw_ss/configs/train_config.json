@@ -1,0 +1,96 @@
+{
+  "name": "default_config",
+  "n_gpu": 1,
+  "preprocessing": {
+    "sr": 16000,
+    "spectrogram": {
+      "type": "MelSpectrogram",
+      "args": {
+      }
+    },
+    "log_spec": true
+  },
+  "augmentations": {},
+  "arch": {
+    "type": "SpexPlus",
+    "args": {
+      "n_feats": 128
+    }
+  },
+  "data": {
+    "train": {
+      "batch_size": 10,
+      "num_workers": 5,
+      "datasets": [
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "train-clean-100",
+            "max_audio_length": 20.0
+          }
+        }
+      ]
+    },
+    "test-clean": {
+      "batch_size": 4,
+      "num_workers": 5,
+      "datasets": [
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "test-clean"
+          }
+        }
+      ]
+    }
+  },
+  "optimizer": {
+    "type": "Adam",
+    "args": {
+      "lr": 3e-4
+    }
+  },
+  "loss": {
+    "type": "SpexPlusLoss",
+    "args": {}
+  },
+  "metrics": [
+    {
+      "type": "PESQMetric",
+      "args": {
+        "name": "PESQ",
+        "sr": 16000
+      }
+    },
+    {
+      "type": "SI_SDRMetric",
+      "args": {
+        "name": "SI-SDR",
+        "sr": 16000
+      }
+    }
+  ],
+  "lr_scheduler": {
+    "type": "OneCycleLR",
+    "args": {
+      "steps_per_epoch": 1000,
+      "epochs": 51,
+      "anneal_strategy": "cos",
+      "max_lr": 3e-4,
+      "pct_start": 0.2
+    }
+  },
+  "trainer": {
+    "epochs": 50,
+    "save_dir": "saved/",
+    "save_period": 5,
+    "verbosity": 2,
+    "monitor": "min val_loss",
+    "early_stop": 100,
+    "visualize": "wandb",
+    "wandb_project": "ss_project",
+    "wandb_run_name": "baseline",
+    "len_epoch": 1000,
+    "grad_norm_clip": 10
+  }
+}

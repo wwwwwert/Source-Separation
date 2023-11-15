@@ -1,0 +1,100 @@
+{
+  "name": "default_config",
+  "n_gpu": 1,
+  "preprocessing": {
+    "sr": 16000,
+    "spectrogram": {
+      "type": "MelSpectrogram",
+      "args": {
+      }
+    },
+    "log_spec": true
+  },
+  "augmentations": {
+    "wave": [
+      {
+        "type": "Gain",
+        "args": {}
+      }, 
+      {
+        "type": "BackgroundNoise",
+        "args": {"sample_rate": 16000}
+      }, 
+      {
+        "type": "RoomImpulse",
+        "args": {"sample_rate": 16000}
+      }
+    ],
+    "spectrogram": [{
+      "type": "SpecAug",
+      "args": {}
+    }]
+  },
+  "arch": {
+    "type": "DeepSpeech2",
+    "args": {
+      "n_feats": 128
+    }
+  },
+  "data": {
+    "test": {
+      "batch_size": 50,
+      "num_workers": 5,
+      "datasets": [
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "test-clean"
+          }
+        }
+      ]
+    }
+  },
+  "optimizer": {
+    "type": "Adam",
+    "args": {
+      "lr": 3e-4
+    }
+  },
+  "loss": {
+    "type": "CTCLoss",
+    "args": {}
+  },
+  "metrics": [
+    {
+      "type": "BeamSearchWERMetricLM",
+      "args": {
+        "name": "WER LM"
+      }
+    },
+    {
+      "type": "BeamSearchCERMetricLM",
+      "args": {
+        "name": "CER LM"
+      }
+    }
+  ],
+  "lr_scheduler": {
+    "type": "OneCycleLR",
+    "args": {
+      "steps_per_epoch": 100,
+      "epochs": 51,
+      "anneal_strategy": "cos",
+      "max_lr": 3e-4,
+      "pct_start": 0.2
+    }
+  },
+  "trainer": {
+    "epochs": 50,
+    "save_dir": "saved/",
+    "save_period": 5,
+    "verbosity": 2,
+    "monitor": "min val_loss",
+    "early_stop": 100,
+    "visualize": "wandb",
+    "wandb_project": "asr_project",
+    "wandb_run_name": "baseline",
+    "len_epoch": 100,
+    "grad_norm_clip": 10
+  }
+}
