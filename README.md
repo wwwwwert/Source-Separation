@@ -1,7 +1,7 @@
 # SS project 
 
 ## Project description
-This is HW12 in the course Deep Learning for Sound Processing.
+This is HW2 in the course Deep Learning for Sound Processing.
 
 In this project SpEx+ ([paper](https://www.isca-speech.org/archive/pdfs/interspeech_2020/ge20_interspeech.pdf)) model was implemented for Speaker Separation task.
 
